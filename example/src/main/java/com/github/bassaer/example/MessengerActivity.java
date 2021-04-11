@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.TypedValue;
@@ -28,8 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Simple chat example activity
@@ -75,7 +80,7 @@ public class MessengerActivity extends Activity {
     private static final int READ_REQUEST_CODE = 100;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger);
 
@@ -112,7 +117,7 @@ public class MessengerActivity extends Activity {
 
         mChatView.setOnBubbleClickListener(new Message.OnBubbleClickListener() {
             @Override
-            public void onClick(Message message) {
+            public void onClick(@NotNull Message message) {
                 mChatView.updateMessageStatus(message, MyMessageStatusFormatter.STATUS_SEEN);
                 Toast.makeText(
                         MessengerActivity.this,
@@ -124,7 +129,7 @@ public class MessengerActivity extends Activity {
 
         mChatView.setOnIconClickListener(new Message.OnIconClickListener() {
             @Override
-            public void onIconClick(Message message) {
+            public void onIconClick(@NotNull Message message) {
                 Toast.makeText(
                         MessengerActivity.this,
                         "click : icon " + message.getUser().getName(),
@@ -135,7 +140,7 @@ public class MessengerActivity extends Activity {
 
         mChatView.setOnIconLongClickListener(new Message.OnIconLongClickListener() {
             @Override
-            public void onIconLongClick(Message message) {
+            public void onIconLongClick(@NotNull Message message) {
                 Toast.makeText(
                         MessengerActivity.this,
                         "Removed this message \n" + message.getText(),
@@ -196,9 +201,9 @@ public class MessengerActivity extends Activity {
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    private void receiveMessage(String sendText) {
+    private void receiveMessage(@Nullable String sendText) {
         //Ignore hey
-        if (!sendText.contains("hey")) {
+        if (sendText != null && sendText.length() > 0 && !sendText.contains("hey")) {
 
             //Receive message
             final Message receivedMessage = new Message.Builder()
@@ -220,7 +225,7 @@ public class MessengerActivity extends Activity {
             if (mReplyDelay < 0) {
                 mReplyDelay = (new Random().nextInt(4) + 1) * 1000;
             }
-            new Handler().postDelayed(new Runnable() {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mChatView.receive(receivedMessage);
@@ -239,7 +244,14 @@ public class MessengerActivity extends Activity {
         }
         Uri uri = data.getData();
         try {
-            Bitmap picture = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            Bitmap picture;
+            if (Build.VERSION.SDK_INT >= 29) {
+                ImageDecoder.Source source = ImageDecoder.createSource(getContentResolver(), uri);
+                picture = ImageDecoder.decodeBitmap(source);
+            } else {
+                picture = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+            }
+
             Message message = new Message.Builder()
                     .setRight(true)
                     .setText(Message.Type.PICTURE.name())

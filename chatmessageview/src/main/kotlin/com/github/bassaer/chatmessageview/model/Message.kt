@@ -102,10 +102,10 @@ class Message {
     var type: Type? = null
 
     val timeText: String
-        get() = mSendTimeFormatter!!.getFormattedTimeText(sendTime!!)
+        get() = mSendTimeFormatter!!.getFormattedTimeText(sendTime)
 
     val dateSeparateText: String
-        get() = mDateFormatter!!.getFormattedTimeText(sendTime!!)
+        get() = mDateFormatter!!.getFormattedTimeText(sendTime)
 
     val statusIcon: Drawable
         get() = statusIconFormatter!!.getStatusIcon(status, isRight)

@@ -9,6 +9,7 @@ import com.github.bassaer.chatmessageview.R
 import com.github.bassaer.chatmessageview.model.Attribute
 import com.github.bassaer.chatmessageview.model.ChatUser
 import com.github.bassaer.chatmessageview.model.Message
+import com.nhaarman.mockito_kotlin.mock
 
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -59,7 +60,7 @@ internal class MessageAdapterTest {
         val messageArray: Array<View?> = arrayOfNulls(messageList.size)
 
         for (i in 0 until messageList.size) {
-            messageArray[i] = messageAdapter.getView(i, null, null)
+            messageArray[i] = messageAdapter.getView(i, null, mock())
         }
 
         // Date label

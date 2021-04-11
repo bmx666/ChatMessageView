@@ -8,6 +8,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import com.github.bassaer.example.util.lazyActivityScenarioRule
 import org.hamcrest.Matchers.anything
 import org.junit.Before
 import org.junit.Rule
@@ -23,16 +24,15 @@ class MainActivityTest {
 
     @Rule
     @JvmField
-    var activityRule = ActivityTestRule(MainActivity::class.java)
-
-    @Before
-    fun setUp() {
-        activityRule.launchActivity(Intent())
-    }
+    val rule = lazyActivityScenarioRule<MainActivity>(launchActivity = false)
 
     @Test
     fun checkMenuList() {
-        val menu = activityRule.activity.gettMenu()
+        rule.launch()
+        lateinit var menu: Array<String>
+        rule.getScenario().onActivity {
+            menu = it.gettMenu()
+        }
         for (i in menu.indices) {
             onRow(i).check(matches(withText(menu[i])))
         }

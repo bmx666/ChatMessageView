@@ -2,6 +2,7 @@ package com.github.bassaer.chatmessageview.view
 
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import android.widget.ListView
@@ -83,7 +84,7 @@ class MessageView : ListView, View.OnFocusChangeListener {
         adapter = messageAdapter
 
         val weakMessageAdapter: WeakReference<MessageAdapter> = WeakReference(messageAdapter)
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         val refreshTimer = Timer(true)
         refreshTimer.schedule(object : TimerTask() {
             override fun run() {

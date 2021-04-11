@@ -43,7 +43,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$androidXEspressoIdlingResourceVersion"
     androidTestImplementation "androidx.test:rules:$androidXTestRulesVersion"
     androidTestImplementation "androidx.test:runner:$androidXTestRunnerVersion"
-    androidTestImplementation "androidx.test.ext:junit:$androidXTestExtJunitVersion"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$androidXTestExtJunitKtxVersion"
 }
 
 repositories {

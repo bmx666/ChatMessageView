@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.os.Handler
+import android.os.Looper
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -75,7 +76,7 @@ class ChatView : LinearLayout {
             override fun onKeyboardAppeared(hasChanged: Boolean) {
                 //Appeared keyboard
                 if (hasChanged) {
-                    Handler().postDelayed({
+                    Handler(Looper.getMainLooper()).postDelayed({
                         //Scroll to end
                         messageView.scrollToEnd()
                     }, 500)

@@ -74,7 +74,7 @@ class MessageAdapter(context: Context, resource: Int, private val objects: List<
     }
 
     @SuppressLint("InflateParams")
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val item = getItem(position)
         var view = convertView
 

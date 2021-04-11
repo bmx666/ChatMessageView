@@ -2,7 +2,7 @@ package com.github.bassaer.chatmessageview.model
 
 import android.graphics.Bitmap
 
-class ChatUser(internal var id: Int?, internal var name: String, internal var icon: Bitmap) : IChatUser {
+class ChatUser(internal var id: Int?, internal var name: String?, internal var icon: Bitmap?) : IChatUser {
 
     override fun getId(): String {
         return this.id!!.toString()

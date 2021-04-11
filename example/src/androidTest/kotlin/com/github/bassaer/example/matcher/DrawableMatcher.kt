@@ -1,6 +1,8 @@
 package com.github.bassaer.example.matcher
 
-import android.graphics.drawable.BitmapDrawable
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
 
@@ -8,6 +10,7 @@ import androidx.core.content.res.ResourcesCompat
 
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
+
 
 /**
  * Custom matcher to test drawable resource
@@ -29,10 +32,18 @@ class DrawableMatcher(private val mExpectedId: Int) : TypeSafeMatcher<View>(View
         if (expectedDrawable == null) {
             return false
         }
-        val bitmap = (target.drawable as BitmapDrawable).bitmap
-        val otherBitmap = (expectedDrawable as BitmapDrawable).bitmap
+        val bitmap = getBitmap(target.drawable)
+        val otherBitmap = getBitmap(expectedDrawable)
 
         return bitmap.sameAs(otherBitmap)
+    }
+
+    private fun getBitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
     }
 
     override fun describeTo(description: Description) {
